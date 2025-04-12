@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "LyricSearch",
+  "version": "1.0",
+  "description": "Get lyrics and meaning for the song currently playing on Spotify",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://open.spotify.com/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.perplexity.ai/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "LyricSearch"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
