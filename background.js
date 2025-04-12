@@ -1,12 +1,16 @@
 // Background script for LyricSearch extension
 
+// Hardcoded API keys (replace with your actual keys)
+const geminiApiKey = "AIzaSyCZDI2WQbEAVhWH7AxasayTdkBK5yA5Uk8";
+const perplexityApiKey = "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";
+
 // Handle messages from popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'processSongInfo') {
     processSongInfo(
-      message.screenshot, 
-      message.geminiApiKey, 
-      message.perplexityApiKey
+      message.screenshot,
+      geminiApiKey,
+      perplexityApiKey
     ).then(sendResponse);
     return true; // Indicates async response
   }
@@ -19,8 +23,8 @@ async function processSongInfo(screenshotDataUrl, geminiApiKey, perplexityApiKey
     const songInfo = await identifySongWithGemini(screenshotDataUrl, geminiApiKey);
     
     if (songInfo === 'Unable to Find Song') {
-      return { 
-        error: 'Could not identify a song playing on Spotify. Make sure a song is currently playing and visible.' 
+      return {
+        error: 'Could not identify a song playing on Spotify. Make sure a song is currently playing and visible.'
       };
     }
     
@@ -35,8 +39,8 @@ async function processSongInfo(screenshotDataUrl, geminiApiKey, perplexityApiKey
     
   } catch (error) {
     console.error('Error processing song info:', error);
-    return { 
-      error: error.message || 'An error occurred while processing your request.' 
+    return {
+      error: error.message || 'An error occurred while processing your request.'
     };
   }
 }
@@ -99,7 +103,7 @@ async function identifySongWithGemini(screenshotDataUrl, apiKey) {
   const data = await response.json();
   
   // Extract the text response
-  if (data.candidates && data.candidates[0] && data.candidates[0].content && 
+  if (data.candidates && data.candidates[0] && data.candidates[0].content &&
       data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
     return data.candidates[0].content.parts[0].text.trim();
   } else {
@@ -111,10 +115,26 @@ async function identifySongWithGemini(screenshotDataUrl, apiKey) {
 async function getLyricsWithPerplexity(songInfo, apiKey) {
   const apiUrl = 'https://api.perplexity.ai/chat/completions';
   
-  const prompt = `search up online and tell me the lyrics to the following song "${songInfo}". tell me the lyrics you find and give them to me. if you can't find the lyrics, then explicitly say so. it is of utmost importance that you ABSOLUTELY DO NOT hallucinate. do not make up lyrics. if you find them, then tell me them. if you don't, then tell me that. do NOT give any other text other than the lyrics of the song. make your response as short as possible, and only tell me the lyrics. if you can't find the lyrics, or if they seem to be incomplete, then simply say "unable to find lyrics". if you can't find the song, then simply say "unable to find song" if the song name is "Unable to Find Song", then say "Invalid Input" thats it.
-  
-  THIS NEXT PART IS IMPORTANT. then, after that, only if the lyrics have been found, then do the following. print out <MEANING>. then look online and find the meaning to those lyrics. if you find the meaning of those lyrics somewhere, then give me the meaning of the lyrics. if you can't find it, then take the lyrics, and give me your own analysis. tell me what you think the lyrics mean.`;
-  
+  // Updated prompt to force the response to be split into two tags: <LYRICS> and <MEANING>
+  const prompt = `Search online for the complete lyrics to the following song: "${songInfo}".
+- If the lyrics are found, then respond exactly in the format below:
+<LYRICS>
+[the complete lyrics exactly as found, do not add any commentary or formatting]
+</LYRICS>
+<MEANING>
+[an analysis or explanation of the meaning of these lyrics; if a published meaning is not available, provide a brief analysis]
+</MEANING>
+
+- If you are unable to find the lyrics, then respond exactly in the following format:
+<LYRICS>
+Unable to find lyrics
+</LYRICS>
+<MEANING>
+Unable to find lyrics
+</MEANING>
+
+Do not include any other text beyond what is specified.`;
+
   const requestData = {
     model: 'sonar',
     messages: [
@@ -144,32 +164,28 @@ async function getLyricsWithPerplexity(songInfo, apiKey) {
   
   const data = await response.json();
   
-  // Process the response to extract lyrics and meaning
   let lyrics = '';
   let meaning = '';
   
-  if (data.choices && data.choices[0] && data.choices[0].message.content) {
+  if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
     const content = data.choices[0].message.content;
     
-    // Check if this is a "unable to find" message
-    if (content.includes('unable to find lyrics') || 
-        content.includes('Unable to find song') || 
-        content.includes('Invalid Input')) {
-      return {
-        lyrics: content.trim(),
-        meaning: ''
-      };
-    }
+    // Use regular expressions to extract the <LYRICS> and <MEANING> blocks.
+    const lyricsMatch = content.match(/<LYRICS>\s*([\s\S]*?)\s*<\/LYRICS>/i);
+    const meaningMatch = content.match(/<MEANING>\s*([\s\S]*?)\s*<\/MEANING>/i);
     
-    // Split by meaning marker if it exists
-    const parts = content.split('<MEANING>');
-    
-    if (parts.length > 1) {
-      lyrics = parts[0].trim();
-      meaning = parts[1].trim();
+    if (lyricsMatch && lyricsMatch[1]) {
+      lyrics = lyricsMatch[1].trim();
     } else {
       lyrics = content.trim();
     }
+    
+    if (meaningMatch && meaningMatch[1]) {
+      meaning = meaningMatch[1].trim();
+    } else {
+      meaning = "";
+    }
+    
   } else {
     throw new Error('Unexpected Perplexity API response format');
   }
