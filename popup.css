@@ -1,22 +1,25 @@
+/* Apply a dark background and light text */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   width: 400px;
   margin: 0;
   padding: 0;
-  color: #333;
-  background-color: #f9f9f9;
+  background-color: #121212; /* dark background */
+  color: #ffffff;
 }
 
+/* Container padding remains, with a transparent background */
 .container {
   padding: 16px;
 }
 
+/* Header styling with bold white text and Spotify green accents */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 1px solid #282828;
   padding-bottom: 10px;
 }
 
@@ -24,35 +27,41 @@ h1 {
   margin: 0;
   font-size: 20px;
   color: #1DB954; /* Spotify green */
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600; /* or 700 if you want a bolder look */
 }
 
+/* Status message in a lighter grey tone */
 .status-message {
-  color: #666;
+  color: #b3b3b3;
   font-style: italic;
   margin-bottom: 15px;
 }
 
+/* Song info displayed over a darker grey background */
 .song-info {
   margin-bottom: 15px;
   padding: 10px;
-  background-color: #f0f0f0;
+  background-color: #282828;
   border-radius: 5px;
 }
 
 .song-info h2 {
   margin: 0 0 5px 0;
   font-size: 18px;
+  color: #ffffff;
 }
 
 .song-info p {
   margin: 0;
   font-size: 14px;
-  color: #666;
+  color: #b3b3b3;
 }
 
+/* Tab headers and buttons styled for a dark theme */
 .tab-headers {
   display: flex;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #282828;
   margin-bottom: 10px;
 }
 
@@ -63,27 +72,31 @@ h1 {
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
-  color: #666;
+  color: #b3b3b3;
 }
 
 .tab-btn.active {
-  color: #1DB954;
+  color: #ffffff;
   border-bottom: 2px solid #1DB954;
 }
 
+/* Content areas with sufficient padding */
 .tab-content {
   padding: 10px 0;
   max-height: 300px;
   overflow-y: auto;
 }
 
-.lyrics-content, .meaning-content {
+.lyrics-content,
+.meaning-content {
   white-space: pre-line;
   line-height: 1.5;
+  color: #ffffff;
 }
 
+/* Spinner using the Spotify green for its animation */
 .spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
+  border: 4px solid rgba(255, 255, 255, 0.1);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -97,12 +110,29 @@ h1 {
   100% { transform: rotate(360deg); }
 }
 
+/* Error message styling with dark background and red accent */
 .error-message {
-  color: #e74c3c;
+  color: #ffffff;
   padding: 10px;
-  background-color: #fdeaea;
+  background-color: #d9534f;
   border-radius: 5px;
   margin: 15px 0;
+}
+
+/* Button styling to match Spotify's modern rounded design */
+button {
+  background-color: #1DB954;
+  color: #ffffff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #1ed760;
 }
 
 .hidden {
