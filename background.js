@@ -1,8 +1,8 @@
 // Background script for LyricSearch extension
 
 // Hardcoded API keys (replace with your actual keys)
-const geminiApiKey = "AIzaSyCZDI2WQbEAVhWH7AxasayTdkBK5yA5Uk8";
-const perplexityApiKey = "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";
+const geminiApiKey = "YOUR_API_KEY";
+const perplexityApiKey = "YOUR_API_KEY";
 
 // Handle messages from popup
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
