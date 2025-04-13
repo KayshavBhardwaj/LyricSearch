@@ -4,6 +4,8 @@
   <title>LyricSearch</title>
   <meta charset="utf-8">
   <link rel="stylesheet" href="popup.css">
+  <!-- Changed from Montserrat to Poppins -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap">
 </head>
 <body>
   <div class="container">
@@ -25,6 +27,7 @@
       <div class="tab-headers">
         <button id="lyricsTabBtn" class="tab-btn active">Lyrics</button>
         <button id="meaningTabBtn" class="tab-btn">Meaning</button>
+        <button id="similarTabBtn" class="tab-btn">Songs with Similar Meanings</button>
       </div>
       
       <div id="lyricsTab" class="tab-content">
@@ -34,21 +37,14 @@
       <div id="meaningTab" class="tab-content hidden">
         <div id="meaningContent" class="meaning-content"></div>
       </div>
+      
+      <div id="similarTab" class="tab-content hidden">
+        <div id="similarContent" class="similar-content"></div>
+      </div>
     </div>
     
     <div id="errorMessage" class="error-message hidden"></div>
-    
-    <div class="settings">
-      <div class="settings-row">
-        <label for="geminiApiKey">Gemini API Key:</label>
-        <input type="password" id="geminiApiKey" placeholder="Enter Gemini API Key">
-      </div>
-      <div class="settings-row">
-        <label for="perplexityApiKey">Perplexity API Key:</label>
-        <input type="password" id="perplexityApiKey" placeholder="Enter Perplexity API Key">
-      </div>
-      <button id="saveSettings">Save Keys</button>
-    </div>
+  
   </div>
   <script src="popup.js"></script>
 </body>
