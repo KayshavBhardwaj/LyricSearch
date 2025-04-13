@@ -1,5 +1,5 @@
 # LyricSearch
-Browser extension to automatically find the lyrics, meaning, and similar lyric songs.
+Browser extension to automatically find the lyrics, meaning, and lyrically similar songs.
 
 # Steps to replicate
 After downloading the source files (input your own API keys for Gemini and Perplexity!):
